@@ -1,15 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import './style.css';
 import FilmCard from "../../components/FilmCard";
-import api from '../../services/api';
+import { Context } from '../../App';
 
-const List = ({list, handleShowInfo}) => {
 
-    if(!list.length) {
+
+
+const List = ({handleShowInfo}) => {
+    const { state, dispatch } = useContext(Context);
+
+    const handleDeleteFilm = (id) => dispatch({type: 'FILMS/DELETE_BY_ID', payload: id})
+
+    if(!state.films.length) {
         return <h1>No items</h1>
     }
 
-    return list.map(item => <FilmCard data={item} handleShowInfo={() => handleShowInfo(item)}/>)
+    return (
+        <div className="list_container">
+            {state.films.map(item => <FilmCard handleDeleteFilm={handleDeleteFilm} data={item} handleShowInfo={() => handleShowInfo(item)}/>)}
+        </div>
+    )
 }
 
 const Details = ({data, handleBack}) => {
@@ -27,16 +37,12 @@ const Details = ({data, handleBack}) => {
 }
 
 const Films = () => {
-    const [list, setList] = useState([]);
+    const { state } = useContext(Context);
     const [viewType, setViewType] = useState({
         type: 'list', /// info or list
         data: null,
     })
-    const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        api.getFilms().then(films => setList(films)).finally(() => setIsLoading(false));
-    }, []);
 
     const handleShowInfo = (data) => {
         setViewType({
@@ -52,13 +58,13 @@ const Films = () => {
         })
     }
 
-    if(isLoading) return <h1>Loading...</h1>
+    if(state.isLoading) return <h1>Loading...</h1>
 
     return (
         <div className="container">
             {
                 viewType.type === 'list' ? 
-                <List list={list} handleShowInfo={handleShowInfo}/> : 
+                <List handleShowInfo={handleShowInfo}/> : 
                 <Details data={viewType.data} handleBack={handleBack}/>
             }
         </div>
