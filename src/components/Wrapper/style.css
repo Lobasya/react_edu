@@ -2,3 +2,23 @@
     margin: 0 auto;
     max-width: 1000px;
 }
+
+.wrapper.dark * {
+    background-color: rgba(0, 0, 0, .4);
+    color: white;
+}
+
+.wrapper.dark button {
+    background-color: rgba(0, 0, 0, .7);
+    color: greenyellow;
+}
+
+.wrapper.light * {
+    background-color: rgba(255, 255, 255);
+    color: black;
+}
+
+.wrapper.light button {
+    background-color: rgb(39, 110, 177);
+    color: rgb(93, 11, 123);
+}

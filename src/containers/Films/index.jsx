@@ -1,23 +1,21 @@
 import React, { useEffect, useState, useContext } from "react";
 import './style.css';
 import FilmCard from "../../components/FilmCard";
-import { Context } from '../../App';
-
-
-
+import { useDispatch, useSelector } from "react-redux";
 
 const List = ({handleShowInfo}) => {
-    const { state, dispatch } = useContext(Context);
+    const films = useSelector(state => state.films);
+    const dispatch = useDispatch();
 
     const handleDeleteFilm = (id) => dispatch({type: 'FILMS/DELETE_BY_ID', payload: id})
 
-    if(!state.films.length) {
+    if(!films.length) {
         return <h1>No items</h1>
     }
 
     return (
         <div className="list_container">
-            {state.films.map(item => <FilmCard handleDeleteFilm={handleDeleteFilm} data={item} handleShowInfo={() => handleShowInfo(item)}/>)}
+            {films.map(item => <FilmCard handleDeleteFilm={handleDeleteFilm} data={item} handleShowInfo={() => handleShowInfo(item)}/>)}
         </div>
     )
 }
@@ -37,7 +35,7 @@ const Details = ({data, handleBack}) => {
 }
 
 const Films = () => {
-    const { state } = useContext(Context);
+    const isLoading = useSelector(state => state.ui.isLoading);
     const [viewType, setViewType] = useState({
         type: 'list', /// info or list
         data: null,
@@ -58,7 +56,7 @@ const Films = () => {
         })
     }
 
-    if(state.isLoading) return <h1>Loading...</h1>
+    if(isLoading) return <h1>Loading...</h1>
 
     return (
         <div className="container">
